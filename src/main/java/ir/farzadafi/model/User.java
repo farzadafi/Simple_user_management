@@ -22,7 +22,8 @@ public class User {
     private String firstname;
     private String lastname;
     private String nationalCode;
-    private Date birthdate;
+    private String email;
     private String password;
+    private Date birthdate;
     private LocalDateTime createdIn;
 }
