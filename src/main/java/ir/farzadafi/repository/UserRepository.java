@@ -1,4 +1,4 @@
-package ir.farzadafi.model.repository;
+package ir.farzadafi.repository;
 
 import ir.farzadafi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
