@@ -12,5 +12,5 @@ public class Constant {
             "^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$";
 
     public static final String BIRTHDATE_MESSAGE =
-            "please send a valid birth date -> 1999/10/10";
+            "please send a valid birth date -> 1999-10-10";
 }
