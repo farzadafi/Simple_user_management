@@ -3,6 +3,7 @@ package ir.farzadafi.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Date;
         @UniqueConstraint(name = "UK_national_code", columnNames = "national_code"),
         @UniqueConstraint(name = "UK_email", columnNames = "email")
 })
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
 public class User {
 
     @Id
@@ -40,4 +42,6 @@ public class User {
     @Column(name = "created_in")
     @CreationTimestamp
     private LocalDateTime createdIn;
+
+    private boolean deleted = Boolean.FALSE;
 }
