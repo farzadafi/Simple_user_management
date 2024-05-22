@@ -16,7 +16,7 @@ import static ir.farzadafi.utility.Constant.PASSWORD_MESSAGE;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ChangePasswordDto {
+public class ChangePasswordRequest {
 
     @NotNull(message = "current password must have value")
     String currentPassword;
