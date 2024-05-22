@@ -45,4 +45,8 @@ public class UserService {
         User user = new User();
         userRepository.updatePassword(changePasswordDto.getNewPassword(), user.getId());
     }
+
+    public void remove(int id){
+        userRepository.deleteById(id);
+    }
 }
