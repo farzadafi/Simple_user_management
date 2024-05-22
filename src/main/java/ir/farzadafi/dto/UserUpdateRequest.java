@@ -1,9 +1,9 @@
 package ir.farzadafi.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record UserUpdateRequest(String firstname,
                                 String lastname,
-                                Date birthdate,
+                                LocalDate birthdate,
                                 String email) {
 }
