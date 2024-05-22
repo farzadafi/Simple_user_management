@@ -5,8 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -37,7 +37,7 @@ public class User {
 
     private String password;
 
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Column(name = "created_in")
     @CreationTimestamp
