@@ -1,6 +1,6 @@
 package ir.farzadafi.service;
 
-import ir.farzadafi.exception.UserNameDuplicateException;
+import ir.farzadafi.exception.InformationDuplicateException;
 import ir.farzadafi.model.User;
 import ir.farzadafi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,12 @@ public class UserService {
         try {
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            if (e.getMessage().contains("duplicate key value violates unique constraint"))
-                throw new UserNameDuplicateException
-                        (String.format("%s is duplicate", user.getNationalCode()));
+            if (e.getMessage().contains("user.UK_national_code"))
+                throw new InformationDuplicateException
+                        (String.format("%s national code is duplicate", user.getNationalCode()));
+            if (e.getMessage().contains("user.UK_email"))
+                throw new InformationDuplicateException
+                        (String.format("%s email is duplicate", user.getEmail()));
         }
         return user;
     }
