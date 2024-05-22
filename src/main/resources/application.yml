@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/user-management
+    username: root
+    password: mysql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
