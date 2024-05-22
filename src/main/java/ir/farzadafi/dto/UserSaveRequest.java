@@ -5,8 +5,6 @@ import ir.farzadafi.validation.NationalCode;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 
-import java.time.LocalDate;
-
 import static ir.farzadafi.utility.Constant.*;
 
 public record UserSaveRequest(String firstname,
@@ -19,5 +17,5 @@ public record UserSaveRequest(String firstname,
                               String password,
                               @Pattern(regexp = BIRTHDATE_PATTERN, message = BIRTHDATE_MESSAGE)
                               @JsonFormat(pattern = "yyyy-MM-dd")
-                              LocalDate birthdate) {
+                              String birthdate) {
 }
