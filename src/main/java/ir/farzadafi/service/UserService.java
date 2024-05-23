@@ -46,6 +46,7 @@ public class UserService {
     }
 
     public void remove(int id){
+        // TODO: 23.05.24 fetch id from spring security
         userRepository.deleteById(id);
     }
 }
