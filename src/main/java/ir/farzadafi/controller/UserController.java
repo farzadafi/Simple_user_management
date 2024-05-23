@@ -1,9 +1,6 @@
 package ir.farzadafi.controller;
 
-import ir.farzadafi.dto.UserSaveRequest;
-import ir.farzadafi.dto.UserSaveResponse;
-import ir.farzadafi.dto.UserUpdateRequest;
-import ir.farzadafi.dto.UserUpdateResponse;
+import ir.farzadafi.dto.*;
 import ir.farzadafi.mapper.UserMapper;
 import ir.farzadafi.model.User;
 import ir.farzadafi.service.UserService;
@@ -33,5 +30,16 @@ public class UserController {
         User user = UserMapper.INSTANCE.updateRequestToModel(request);
         User updatedUser = userService.update(user);
         return UserMapper.INSTANCE.modelToUpdateResponse(updatedUser);
+    }
+
+    @PatchMapping("/change-password")
+    public void updatePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        userService.updatePassword(request);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> remove(@RequestParam int id) {
+        userService.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
