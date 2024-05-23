@@ -1,7 +1,6 @@
 package ir.farzadafi.service;
 
 import ir.farzadafi.dto.ChangePasswordRequest;
-import ir.farzadafi.dto.UserUpdateRequest;
 import ir.farzadafi.exception.InformationDuplicateException;
 import ir.farzadafi.model.User;
 import ir.farzadafi.repository.UserRepository;
@@ -31,12 +30,12 @@ public class UserService {
         return user;
     }
 
-    public User update(UserUpdateRequest newUserInformation) {
+    public User update(User newUserInformation) {
         // TODO: 22.05.24 find user from DB or spring security, nationalCode and email
         User user = new User();
-        Optional.ofNullable(newUserInformation.firstname()).ifPresent(user::setFirstname);
-        Optional.ofNullable(newUserInformation.lastname()).ifPresent(user::setLastname);
-        Optional.ofNullable(newUserInformation.birthdate()).ifPresent(user::setBirthdate);
+        Optional.ofNullable(newUserInformation.getFirstname()).ifPresent(user::setFirstname);
+        Optional.ofNullable(newUserInformation.getLastname()).ifPresent(user::setLastname);
+        Optional.ofNullable(newUserInformation.getBirthdate()).ifPresent(user::setBirthdate);
         return userRepository.save(user);
     }
 
