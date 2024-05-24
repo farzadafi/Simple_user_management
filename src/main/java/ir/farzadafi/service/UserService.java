@@ -1,7 +1,9 @@
 package ir.farzadafi.service;
 
 import ir.farzadafi.dto.ChangePasswordRequest;
+import ir.farzadafi.dto.GenerateNewVerificationCodeRequest;
 import ir.farzadafi.exception.InformationDuplicateException;
+import ir.farzadafi.exception.NotFoundException;
 import ir.farzadafi.model.User;
 import ir.farzadafi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -48,6 +51,31 @@ public class UserService {
             messageHelper.setText(body, true);
         };
         javaMailSender.send(message);
+    }
+
+    public void enable(int id) {
+        userRepository.enable(id);
+    }
+
+    public void generateNewVerificationCode(GenerateNewVerificationCodeRequest request) {
+        User user = userRepository.findByEmail(request.email()).orElseThrow(
+                () -> new NotFoundException("username " + request.email() + " not found"));
+        checkGenerateNewVerificationCodeValidation(user, request.password());
+
+        Integer id = user.getVerificationUser().getId();
+        user.setUserVerification();
+        user.getVerificationUser().setId(id);
+        user.getVerificationUser().setCreated_in(LocalDateTime.now());
+        userRepository.save(user);
+        sendEmail(user.getEmail(), user.getVerificationUser().getCode());
+    }
+
+    public void checkGenerateNewVerificationCodeValidation(User user, String password) {
+        if (!user.getPassword().equals(password))
+            throw new IllegalArgumentException("your information invalid");
+        int minutesDifference = user.getVerificationUser().calculatePastVerificationTime();
+        if (minutesDifference < 0)
+            throw new IllegalStateException("every 5 minuets can create a token");
     }
 
     public User update(User newUserInformation) {
