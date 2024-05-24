@@ -7,6 +7,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -43,5 +44,18 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdIn;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private VerificationUser verificationUser;
+
+    private boolean enabled = Boolean.FALSE;
+
     private boolean deleted = Boolean.FALSE;
+
+    @PrePersist
+    public void setUserVerification() {
+        Random random = new Random();
+        int code = random.nextInt(99999);
+        VerificationUser verificationUser = new VerificationUser(this, code);
+        this.setVerificationUser(verificationUser);
+    }
 }
