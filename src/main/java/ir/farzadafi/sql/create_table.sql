@@ -10,8 +10,8 @@ CREATE TABLE user
     password      VARCHAR(255),
     birthdate     DATE,
     created_in    DATETIME,
-    enabled     BOOLEAN,
-    deleted       BOOLEAN,
+    enabled     TINYINT,
+    deleted       TINYINT,
     CONSTRAINT UK_national_code UNIQUE (national_code),
     CONSTRAINT UK_email UNIQUE (email)
 );
