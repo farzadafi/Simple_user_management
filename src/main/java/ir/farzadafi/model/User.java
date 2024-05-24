@@ -44,7 +44,7 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdIn;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private VerificationUser verificationUser;
 
     private boolean enabled = Boolean.FALSE;
