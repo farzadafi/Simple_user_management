@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Getter
@@ -27,5 +28,12 @@ public class VerificationUser {
     public VerificationUser(User user, int code) {
         this.user = user;
         this.code = code;
+    }
+
+    @Transient
+    public int calculatePastVerificationTime() {
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(this.getCreated_in(), now);
+        return (int) duration.toMinutes();
     }
 }
