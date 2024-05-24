@@ -4,6 +4,7 @@ import ir.farzadafi.dto.*;
 import ir.farzadafi.mapper.UserMapper;
 import ir.farzadafi.model.User;
 import ir.farzadafi.service.UserService;
+import ir.farzadafi.service.VerificationUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final VerificationUserService verificationUserService;
 
     @PostMapping
     public ResponseEntity<UserSaveResponse> save(@Valid @RequestBody UserSaveRequest request) {
@@ -23,6 +25,16 @@ public class UserController {
         User savedUser = userService.save(user);
         UserSaveResponse userSaveResponse = UserMapper.INSTANCE.modelToResponse(savedUser);
         return new ResponseEntity<>(userSaveResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/verification-account")
+    public void verificationAccount(@RequestParam int code) {
+        verificationUserService.verificationUser(code);
+    }
+
+    @PostMapping("/generate-new-verification-code")
+    public void generateNewVerificationCode(@Valid @RequestBody GenerateNewVerificationCodeRequest request) {
+        userService.generateNewVerificationCode(request);
     }
 
     @PutMapping
