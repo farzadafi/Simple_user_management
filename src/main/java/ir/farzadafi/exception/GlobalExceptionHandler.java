@@ -45,4 +45,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.PRECONDITION_FAILED);
     }
+
+    @ExceptionHandler(TokenExpireException.class)
+    public ResponseEntity<ErrorDetails> tokenExpireExceptionHandler(TokenExpireException e) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
 }
