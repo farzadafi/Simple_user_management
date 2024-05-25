@@ -30,5 +30,7 @@ public record UserSaveRequest(
         @Pattern(regexp = BIRTHDATE_PATTERN, message = BIRTHDATE_MESSAGE)
         @JsonFormat(pattern = "yyyy-MM-dd")
         @Schema(example = "1997-10-10")
-        String birthdate) {
+        String birthdate,
+
+        AddressSaveRequest address) {
 }
