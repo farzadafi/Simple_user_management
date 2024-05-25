@@ -4,6 +4,7 @@ import ir.farzadafi.dto.ChangePasswordRequest;
 import ir.farzadafi.dto.GenerateNewVerificationCodeRequest;
 import ir.farzadafi.exception.InformationDuplicateException;
 import ir.farzadafi.exception.NotFoundException;
+import ir.farzadafi.model.Address;
 import ir.farzadafi.model.User;
 import ir.farzadafi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
+    private final AddressService addressService;
 
     public User save(User user) {
         try {
+            Address save = addressService.save(user.getAddress());
+            user.setAddress(save);
             user = userRepository.save(user);
             sendEmail(user.getEmail(), user.getVerificationUser().getCode());
         } catch (DataIntegrityViolationException e) {
