@@ -40,6 +40,9 @@ public class User {
 
     private LocalDate birthdate;
 
+    @OneToOne
+    private Address address;
+
     @Column(name = "created_in")
     @CreationTimestamp
     private LocalDateTime createdIn;
