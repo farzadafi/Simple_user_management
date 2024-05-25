@@ -22,6 +22,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserSaveResponse> save(@Valid @RequestBody UserSaveRequest request) {
         User user = UserMapper.INSTANCE.requestToModel(request);
+        user.getAddress().getCounty().setLocationHierarchyById(user.getAddress().getProvince().getId());
+        user.getAddress().getCity().setLocationHierarchyById(user.getAddress().getCounty().getId());
         User savedUser = userService.save(user);
         UserSaveResponse userSaveResponse = UserMapper.INSTANCE.modelToResponse(savedUser);
         return new ResponseEntity<>(userSaveResponse, HttpStatus.CREATED);
