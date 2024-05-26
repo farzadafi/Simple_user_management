@@ -12,6 +12,8 @@ import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -135,5 +137,9 @@ public class UserService {
             Join<Address, LocationHierarchy> hierarchyJoin = addressJoin.join(column);
             return builder.equal(hierarchyJoin.get("name"), value);
         };
+    }
+
+    public Page<User> getAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }
