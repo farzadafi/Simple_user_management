@@ -1,6 +1,8 @@
 package ir.farzadafi.repository;
 
 import ir.farzadafi.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     void enable(@Param("id") int id);
 
     Optional<User> findByEmail(String email);
+
+    Page<User> findAll(Pageable pageable);
 }
