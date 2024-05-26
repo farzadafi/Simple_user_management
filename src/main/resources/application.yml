@@ -6,11 +6,14 @@ spring:
     password: mysql
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
   mail:
     host: 172.17.0.3
     port: 1025
+  sql:
+    init:
+      mode: always
 server:
   error:
     include-message: always
