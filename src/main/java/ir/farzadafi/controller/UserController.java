@@ -5,15 +5,20 @@ import ir.farzadafi.mapper.UserMapper;
 import ir.farzadafi.model.User;
 import ir.farzadafi.service.UserService;
 import ir.farzadafi.service.VerificationUserService;
+import ir.farzadafi.validation.ValidSearchColumn;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -55,5 +60,11 @@ public class UserController {
     public ResponseEntity<Void> remove(@RequestParam int id) {
         userService.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/dynamic-find")
+    public List<User> findWithCriteria(@ValidSearchColumn @RequestParam String column,
+                                       @RequestParam String value) {
+        return userService.findAllByCriteria(column, value);
     }
 }
