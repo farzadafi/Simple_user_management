@@ -30,4 +30,12 @@ CREATE TABLE IF NOT EXISTS address
     province_id INT REFERENCES location_hierarchy (id),
     county_id   INT REFERENCES location_hierarchy (id),
     city_id     INT REFERENCES location_hierarchy (id)
-)
+);
+
+CREATE TABLE IF NOT EXISTS verification_user
+(
+    id INT AUTO_INCREMENT PRIMARY KEY ,
+    code INT,
+    created_in DATETIME,
+    user_id INT REFERENCES user(id)
+);
