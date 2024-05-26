@@ -14,13 +14,13 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
     private LocationHierarchy province;
 
-    @OneToOne
+    @ManyToOne
     private LocationHierarchy county;
 
-    @OneToOne
+    @ManyToOne
     private LocationHierarchy city;
 
     private String street;
