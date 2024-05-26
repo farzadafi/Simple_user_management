@@ -7,6 +7,7 @@ import ir.farzadafi.exception.NotFoundException;
 import ir.farzadafi.model.Address;
 import ir.farzadafi.model.User;
 import ir.farzadafi.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,6 +26,7 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final AddressService addressService;
 
+    @Transactional
     public User save(User user) {
         try {
             Address save = addressService.save(user.getAddress());
