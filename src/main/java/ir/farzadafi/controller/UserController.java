@@ -3,6 +3,7 @@ package ir.farzadafi.controller;
 import ir.farzadafi.dto.*;
 import ir.farzadafi.mapper.UserMapper;
 import ir.farzadafi.model.User;
+import ir.farzadafi.service.TokenService;
 import ir.farzadafi.service.UserService;
 import ir.farzadafi.service.VerificationUserService;
 import ir.farzadafi.validation.ValidSearchColumn;
@@ -25,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
     private final VerificationUserService verificationUserService;
+    private final TokenService tokenService;
 
     @PostMapping
     public ResponseEntity<UserSaveResponse> save(@Valid @RequestBody UserSaveRequest request) {
@@ -81,5 +83,10 @@ public class UserController {
                 .stream()
                 .map(UserMapper.INSTANCE::modelToSearchResponse)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/get-token")
+    public String getToken(@Valid JwtTokenRequest request) {
+        return tokenService.createToken(request);
     }
 }
