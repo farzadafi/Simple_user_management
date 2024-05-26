@@ -70,7 +70,7 @@ public class UserController {
         return userService.findAllByCriteria(column, value)
                 .stream()
                 .map(UserMapper.INSTANCE::modelToSearchResponse)
-                .collect(Collectors.toList())
+                .collect(Collectors.toList());
     }
 
     @GetMapping("get-all")
