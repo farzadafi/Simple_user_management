@@ -58,4 +58,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.SERVICE_UNAVAILABLE);
     }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<ErrorDetails> numberFormatExceptionHandler() {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), "Please send a number for age");
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 }
