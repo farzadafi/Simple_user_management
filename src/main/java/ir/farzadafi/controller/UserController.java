@@ -8,12 +8,14 @@ import ir.farzadafi.service.VerificationUserService;
 import ir.farzadafi.validation.ValidSearchColumn;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -66,5 +68,15 @@ public class UserController {
     public List<User> findWithCriteria(@ValidSearchColumn @RequestParam String column,
                                        @RequestParam String value) {
         return userService.findAllByCriteria(column, value);
+    }
+
+    @GetMapping("get-all")
+    public List<UserSearchResponse> getAllUser(@RequestParam(defaultValue = "10") int size,
+                                               @RequestParam(defaultValue = "0") int page) {
+        return userService
+                .getAllUser(PageRequest.of(page, size))
+                .stream()
+                .map(UserMapper.INSTANCE::modelToSearchResponse)
+                .collect(Collectors.toList());
     }
 }
