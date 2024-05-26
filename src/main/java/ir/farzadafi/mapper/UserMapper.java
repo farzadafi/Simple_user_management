@@ -1,9 +1,6 @@
 package ir.farzadafi.mapper;
 
-import ir.farzadafi.dto.UserSaveRequest;
-import ir.farzadafi.dto.UserSaveResponse;
-import ir.farzadafi.dto.UserUpdateRequest;
-import ir.farzadafi.dto.UserUpdateResponse;
+import ir.farzadafi.dto.*;
 import ir.farzadafi.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,4 +24,6 @@ public interface UserMapper {
     User updateRequestToModel(UserUpdateRequest userUpdateRequest);
 
     UserUpdateResponse modelToUpdateResponse(User user);
+
+    UserSearchResponse modelToSearchResponse(User user);
 }
