@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.net.NoRouteToHostException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -50,5 +51,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> tokenExpireExceptionHandler(TokenExpireException e) {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(NoRouteToHostException.class)
+    public ResponseEntity<ErrorDetails> noRouteToHostExceptionHandler(NoRouteToHostException e) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
