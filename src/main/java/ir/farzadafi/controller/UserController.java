@@ -65,9 +65,12 @@ public class UserController {
     }
 
     @GetMapping("/dynamic-find")
-    public List<User> findWithCriteria(@ValidSearchColumn @RequestParam String column,
-                                       @RequestParam String value) {
-        return userService.findAllByCriteria(column, value);
+    public List<UserSearchResponse> findWithCriteria(@ValidSearchColumn @RequestParam String column,
+                                                     @RequestParam String value) {
+        return userService.findAllByCriteria(column, value)
+                .stream()
+                .map(UserMapper.INSTANCE::modelToSearchResponse)
+                .collect(Collectors.toList())
     }
 
     @GetMapping("get-all")
