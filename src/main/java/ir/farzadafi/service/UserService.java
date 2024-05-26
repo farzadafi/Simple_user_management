@@ -18,6 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,6 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JavaMailSender javaMailSender;
     private final AddressService addressService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     public User save(User user) {
@@ -141,5 +144,21 @@ public class UserService {
 
     public Page<User> getAllUser(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    public User isLoginCheck(String username, String password) {
+        User user = findByNationalCode(username);
+        if (user == null)
+            throw new BadCredentialsException("Bad credentials");
+        boolean isTheSamePassword = passwordEncoder.matches(password, user.getPassword());
+        if (isTheSamePassword)
+            return user;
+        else
+            throw new BadCredentialsException("Bad credentials");
+    }
+
+    public User findByNationalCode(String username) {
+        Optional<User> user = userRepository.findByNationalCode(username);
+        return user.orElse(null);
     }
 }
