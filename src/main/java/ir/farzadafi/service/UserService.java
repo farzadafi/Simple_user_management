@@ -5,17 +5,22 @@ import ir.farzadafi.dto.GenerateNewVerificationCodeRequest;
 import ir.farzadafi.exception.InformationDuplicateException;
 import ir.farzadafi.exception.NotFoundException;
 import ir.farzadafi.model.Address;
+import ir.farzadafi.model.LocationHierarchy;
 import ir.farzadafi.model.User;
 import ir.farzadafi.repository.UserRepository;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -102,5 +107,33 @@ public class UserService {
     public void remove(int id) {
         // TODO: 23.05.24 fetch id from spring security
         userRepository.deleteById(id);
+    }
+
+    public List<User> findAllByCriteria(String column, String value) {
+        Specification<User> userSpecification = null;
+        switch (column) {
+            case "age" -> userSpecification = createAgeSpecification(Integer.parseInt(value));
+            case "province", "county", "city" ->
+                    userSpecification = createLocationHierarchySpecification(column, value);
+        }
+        assert userSpecification != null;
+        return userRepository.findAll(userSpecification);
+    }
+
+    private Specification<User> createAgeSpecification(int age) {
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int yearOfBirthdate = currentYear - age;
+        return (root, query, builder)
+                -> builder.equal(builder.function("YEAR", Integer.class, root.get("birthdate")), yearOfBirthdate);
+    }
+
+    private Specification<User> createLocationHierarchySpecification(String column, String value) {
+        return (root, query, builder)
+                -> {
+            Join<User, Address> addressJoin = root.join("address");
+            Join<Address, LocationHierarchy> hierarchyJoin = addressJoin.join(column);
+            return builder.equal(hierarchyJoin.get("name"), value);
+        };
     }
 }
