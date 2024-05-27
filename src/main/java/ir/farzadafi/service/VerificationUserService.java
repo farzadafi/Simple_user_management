@@ -20,7 +20,7 @@ public class VerificationUserService {
         VerificationUser verificationUser = repository.findByCode(code).orElseThrow(
                 () -> new NotFoundException("please register again"));
         checkVerificationTime(verificationUser);
-        userService.enable(verificationUser.getId());
+        userService.enable(verificationUser.getUser().getId());
         repository.customDelete(verificationUser.getId());
     }
 
