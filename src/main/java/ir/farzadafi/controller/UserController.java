@@ -65,8 +65,8 @@ public class UserController {
 
     @DeleteMapping
     @CheckAuthorize
-    public ResponseEntity<Void> remove(@RequestParam int id) {
-        userService.remove(id);
+    public ResponseEntity<Void> remove() {
+        userService.remove();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
