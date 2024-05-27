@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 
     @Modifying
-    @Query("UPDATE User u SET u.password = :newPassword WHERE u.id = :id")
-    void updatePassword(@Param("newPassword") String newPassword, @Param("id") int id);
+    @Query("UPDATE User u SET u.password = :newPassword WHERE u.nationalCode = :national")
+    void updatePassword(@Param("newPassword") String newPassword, @Param("national") String id);
 
     @Modifying
     @Query("UPDATE User u SET u.enabled = true WHERE u.id = :id")
@@ -26,4 +26,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     Page<User> findAll(Pageable pageable);
 
     Optional<User> findByNationalCode(String nationalCode);
+
+    void deleteByNationalCode(String nationalCode);
 }
