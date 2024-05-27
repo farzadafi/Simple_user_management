@@ -29,3 +29,11 @@ server:
 jwt:
   public:
     key: file:/home/farzad/Desktop/fileLinux/Maktab/Tamrin/simple_user_management/src/main/resources/public.pub
+############################
+#######SWAGGER##############
+############################
+openapi:
+  service:
+    title: Simple_user_management
+    version: 1.0
+    url: http://localhost:8080
