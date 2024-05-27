@@ -5,6 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -22,7 +27,8 @@ public class AuthorizationAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String tokenWithoutBearer = getJwtToken(request);
         try {
-            this.jwtDecoder.decode(tokenWithoutBearer);
+            Jwt decode = this.jwtDecoder.decode(tokenWithoutBearer);
+            setContextSecurity(decode.getSubject());
         } catch (Exception e) {
             throw new AccessDeniedException("Please send valid Authorization Header!");
         }
@@ -33,5 +39,12 @@ public class AuthorizationAspect {
         if (tokenWithBearer == null || tokenWithBearer.isEmpty() || tokenWithBearer.length() < 10)
             throw new AccessDeniedException("Please send valid Authorization Header!");
         return tokenWithBearer.substring(7);
+    }
+
+    public void setContextSecurity(String nationalCode) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(nationalCode, "password");
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 }
