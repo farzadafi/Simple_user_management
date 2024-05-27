@@ -19,6 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -96,23 +97,25 @@ public class UserService {
     }
 
     public User update(User newUserInformation) {
-        // TODO: 22.05.24 find user from DB or spring security, nationalCode and email
-        User user = new User();
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        User user = userRepository.findByNationalCode(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         Optional.ofNullable(newUserInformation.getFirstname()).ifPresent(user::setFirstname);
         Optional.ofNullable(newUserInformation.getLastname()).ifPresent(user::setLastname);
         Optional.ofNullable(newUserInformation.getBirthdate()).ifPresent(user::setBirthdate);
         return userRepository.save(user);
     }
 
+    @Transactional
     public void updatePassword(ChangePasswordRequest request) {
-        // TODO: 22.05.24 find user from DB or spring security
-        User user = new User();
-        userRepository.updatePassword(request.getNewPassword(), user.getId());
+        String nationalCode = SecurityContextHolder.getContext().getAuthentication().getName();
+        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+        userRepository.updatePassword(encodedPassword, nationalCode);
     }
 
-    public void remove(int id) {
-        // TODO: 23.05.24 fetch id from spring security
-        userRepository.deleteById(id);
+    @Transactional
+    public void remove() {
+        String nationalCode = SecurityContextHolder.getContext().getAuthentication().getName();
+        userRepository.deleteByNationalCode(nationalCode);
     }
 
     public List<User> findAllByCriteria(String column, String value) {
