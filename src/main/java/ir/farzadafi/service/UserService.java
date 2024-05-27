@@ -38,6 +38,7 @@ public class UserService {
 
     @Transactional
     public User save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         try {
             Address save = addressService.save(user.getAddress());
             user.setAddress(save);
