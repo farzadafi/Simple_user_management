@@ -1,5 +1,6 @@
 package ir.farzadafi.controller;
 
+import ir.farzadafi.controller.aspect.CheckAuthorize;
 import ir.farzadafi.dto.*;
 import ir.farzadafi.mapper.UserMapper;
 import ir.farzadafi.model.User;
@@ -49,6 +50,7 @@ public class UserController {
     }
 
     @PutMapping
+    @CheckAuthorize
     public UserUpdateResponse update(@Valid @RequestBody UserUpdateRequest request) {
         User user = UserMapper.INSTANCE.updateRequestToModel(request);
         User updatedUser = userService.update(user);
@@ -56,17 +58,20 @@ public class UserController {
     }
 
     @PatchMapping("/change-password")
+    @CheckAuthorize
     public void updatePassword(@Valid @RequestBody ChangePasswordRequest request) {
         userService.updatePassword(request);
     }
 
     @DeleteMapping
+    @CheckAuthorize
     public ResponseEntity<Void> remove(@RequestParam int id) {
         userService.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/dynamic-find")
+    @CheckAuthorize
     public List<UserSearchResponse> findWithCriteria(@ValidSearchColumn @RequestParam String column,
                                                      @RequestParam String value) {
         return userService.findAllByCriteria(column, value)
@@ -76,6 +81,7 @@ public class UserController {
     }
 
     @GetMapping("get-all")
+    @CheckAuthorize
     public List<UserSearchResponse> getAllUser(@RequestParam(defaultValue = "10") int size,
                                                @RequestParam(defaultValue = "0") int page) {
         return userService
