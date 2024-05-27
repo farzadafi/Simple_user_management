@@ -40,7 +40,7 @@ public class User {
 
     private LocalDate birthdate;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Address address;
 
     @Column(name = "created_in")
