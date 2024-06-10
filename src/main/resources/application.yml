@@ -7,6 +7,15 @@ spring:
     url: jdbc:mysql://mysql:3306/user-management
     username: root
     password: mysql
+############################
+#######HIKARI##############
+############################
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-lifetime: 1800000
+      minimum-idle: 10
+      maximum-pool-size: 20
   jpa:
     hibernate:
       ddl-auto: update
