@@ -4,6 +4,10 @@ import ir.farzadafi.controller.aspect.CheckAuthorize;
 import ir.farzadafi.dto.*;
 import ir.farzadafi.mapper.UserMapper;
 import ir.farzadafi.model.User;
+import ir.farzadafi.model.jaksonClass.BaseClass;
+import ir.farzadafi.model.jaksonClass.SimpleSubClass;
+import ir.farzadafi.model.jaksonClass.SubClassA;
+import ir.farzadafi.model.jaksonClass.SubClassB;
 import ir.farzadafi.service.TokenService;
 import ir.farzadafi.service.UserService;
 import ir.farzadafi.service.VerificationUserService;
@@ -94,5 +98,17 @@ public class UserController {
     @GetMapping("/get-token")
     public String getToken(@Valid JwtTokenRequest request) {
         return tokenService.createToken(request);
+    }
+
+    @GetMapping("/test-json")
+    public String testJson(@RequestBody BaseClass baseClass) {
+        if (baseClass instanceof SimpleSubClass)
+            return "simple type json";
+        else if (baseClass instanceof SubClassA)
+            return "sub class a type json";
+        else if (baseClass instanceof SubClassB)
+            return "sub class b type json";
+        else
+            return "chom :|";
     }
 }
