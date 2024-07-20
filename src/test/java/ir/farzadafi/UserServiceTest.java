@@ -1,6 +1,5 @@
 package ir.farzadafi;
 
-import ir.farzadafi.dto.ChangePasswordRequest;
 import ir.farzadafi.model.Address;
 import ir.farzadafi.model.LocationHierarchy;
 import ir.farzadafi.model.User;
@@ -8,7 +7,6 @@ import ir.farzadafi.model.VerificationUser;
 import ir.farzadafi.repository.UserRepository;
 import ir.farzadafi.service.AddressService;
 import ir.farzadafi.service.UserService;
-import ir.farzadafi.service.VerificationUserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,20 +15,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
