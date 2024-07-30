@@ -55,6 +55,7 @@ public class UserServiceTest {
     class saveUserScenario {
 
         @Test
+        @DisplayName("When every thing is OK and user save successfully")
         void itShouldSaveUser() {
             String plainTextPassword = "password123";
             String expectedEncodedValue = "$2a$10$Qe5rjHk8y7iF9I6RJvMlKeXbzlC9UgPZu/3hTqLxOcWnGdDmBZwK";
