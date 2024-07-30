@@ -7,14 +7,11 @@ import ir.farzadafi.model.VerificationUser;
 import ir.farzadafi.repository.UserRepository;
 import ir.farzadafi.service.AddressService;
 import ir.farzadafi.service.UserService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -36,9 +33,6 @@ public class UserServiceTest {
     @Mock
     AddressService addressService;
 
-    @Mock
-    private JavaMailSender javaMailSender;
-
     private User user;
     private Address addressSaveRequest;
 
@@ -56,24 +50,29 @@ public class UserServiceTest {
                 null, true, false);
     }
 
-    @Test
-    void itShouldSaveUser() {
-        String plainTextPassword = "password123";
-        String expectedEncodedValue = "$2a$10$Qe5rjHk8y7iF9I6RJvMlKeXbzlC9UgPZu/3hTqLxOcWnGdDmBZwK";
-        when(bCryptPasswordEncoder.encode(plainTextPassword)).thenReturn(expectedEncodedValue);
-        when(addressService.save(any(Address.class))).thenReturn(addressSaveRequest);
-        VerificationUser verificationUser = new VerificationUser(user, 12);
-        given(userRepository.save(any(User.class)))
-                .willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-        user.setVerificationUser(verificationUser);
-        User actual = underTest.save(user);
-        Assertions.assertNotNull(actual);
-        assertEquals(user.getFirstname(), actual.getFirstname());
-        assertEquals(user.getLastname(), actual.getLastname());
-        assertEquals(user.getNationalCode(), actual.getNationalCode());
-        assertEquals(user.getEmail(), actual.getEmail());
-        assertEquals(user.getPassword(), actual.getPassword());
-        assertEquals(user.getBirthdate(), actual.getBirthdate());
-        assertEquals(user.getCreatedIn(), actual.getCreatedIn());
+    @DisplayName("all scenario for user login method")
+    @Nested
+    class saveUserScenario {
+
+        @Test
+        void itShouldSaveUser() {
+            String plainTextPassword = "password123";
+            String expectedEncodedValue = "$2a$10$Qe5rjHk8y7iF9I6RJvMlKeXbzlC9UgPZu/3hTqLxOcWnGdDmBZwK";
+            when(bCryptPasswordEncoder.encode(plainTextPassword)).thenReturn(expectedEncodedValue);
+            when(addressService.save(any(Address.class))).thenReturn(addressSaveRequest);
+            VerificationUser verificationUser = new VerificationUser(user, 12);
+            given(userRepository.save(any(User.class)))
+                    .willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+            user.setVerificationUser(verificationUser);
+            User actual = underTest.save(user);
+            Assertions.assertNotNull(actual);
+            assertEquals(user.getFirstname(), actual.getFirstname());
+            assertEquals(user.getLastname(), actual.getLastname());
+            assertEquals(user.getNationalCode(), actual.getNationalCode());
+            assertEquals(user.getEmail(), actual.getEmail());
+            assertEquals(user.getPassword(), actual.getPassword());
+            assertEquals(user.getBirthdate(), actual.getBirthdate());
+            assertEquals(user.getCreatedIn(), actual.getCreatedIn());
+        }
     }
 }
