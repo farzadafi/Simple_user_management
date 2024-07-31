@@ -1,5 +1,6 @@
 package ir.farzadafi;
 
+import ir.farzadafi.exception.InformationDuplicateException;
 import ir.farzadafi.model.Address;
 import ir.farzadafi.model.LocationHierarchy;
 import ir.farzadafi.model.User;
@@ -12,12 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
@@ -74,6 +77,15 @@ public class UserServiceTest {
             assertEquals(user.getPassword(), actual.getPassword());
             assertEquals(user.getBirthdate(), actual.getBirthdate());
             assertEquals(user.getCreatedIn(), actual.getCreatedIn());
+        }
+
+        @Test
+        @DisplayName("when national code is duplicate")
+        public void firstInvalidScenario() {
+            DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_national_code");
+            when(userRepository.save(any())).thenThrow(exception);
+            assertThrows(InformationDuplicateException.class,
+                    () -> underTest.save(user));
         }
     }
 }
