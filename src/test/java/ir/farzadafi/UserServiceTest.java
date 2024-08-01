@@ -87,5 +87,14 @@ public class UserServiceTest {
             assertThrows(InformationDuplicateException.class,
                     () -> underTest.save(user));
         }
+
+        @Test
+        @DisplayName("when email is duplicate")
+        public void secondInvalidScenario() {
+            DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_email");
+            when(userRepository.save(any())).thenThrow(exception);
+            assertThrows(InformationDuplicateException.class,
+                    () -> underTest.save(user));
+        }
     }
 }
