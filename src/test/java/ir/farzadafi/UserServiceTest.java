@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
@@ -23,18 +25,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
+
     @InjectMocks
     private UserService underTest;
+
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Mock
     AddressService addressService;
+
+    @Mock
+    JavaMailSender javaMailSender;
 
     private User user;
     private Address addressSaveRequest;
@@ -64,6 +74,7 @@ public class UserServiceTest {
             String expectedEncodedValue = "$2a$10$Qe5rjHk8y7iF9I6RJvMlKeXbzlC9UgPZu/3hTqLxOcWnGdDmBZwK";
             when(bCryptPasswordEncoder.encode(plainTextPassword)).thenReturn(expectedEncodedValue);
             when(addressService.save(any(Address.class))).thenReturn(addressSaveRequest);
+            doNothing().when(javaMailSender).send(any(MimeMessagePreparator.class));
             VerificationUser verificationUser = new VerificationUser(user, 12);
             given(userRepository.save(any(User.class)))
                     .willAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
