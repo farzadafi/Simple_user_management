@@ -25,8 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -88,6 +87,7 @@ public class UserServiceTest {
             assertEquals(user.getPassword(), actual.getPassword());
             assertEquals(user.getBirthdate(), actual.getBirthdate());
             assertEquals(user.getCreatedIn(), actual.getCreatedIn());
+            verify(javaMailSender, atLeastOnce()).send(any(MimeMessagePreparator.class));
         }
 
         @Test
