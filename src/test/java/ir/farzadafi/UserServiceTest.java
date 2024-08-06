@@ -107,5 +107,14 @@ public class UserServiceTest {
             assertThrows(InformationDuplicateException.class,
                     () -> underTest.save(user));
         }
+
+        @Test
+        @DisplayName("OK -> when want to enable user")
+        public void itShouldCanEnableUser() {
+            int id = 10;
+            doNothing().when(userRepository).enable(id);
+            underTest.enable(10);
+            verify(userRepository, atLeastOnce()).enable(id);
+        }
     }
 }
