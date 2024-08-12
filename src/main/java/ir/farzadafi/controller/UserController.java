@@ -50,7 +50,7 @@ public class UserController {
 
     @PostMapping("/generate-new-verification-code")
     public void generateNewVerificationCode(@Valid @RequestBody GenerateNewVerificationCodeRequest request) {
-        userService.generateNewVerificationCode(request);
+        userService.generateNewVerificationCodeAndSentIt(request);
     }
 
     @PutMapping

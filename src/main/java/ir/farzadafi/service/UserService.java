@@ -75,7 +75,7 @@ public class UserService {
         userRepository.enable(id);
     }
 
-    public void generateNewVerificationCode(GenerateNewVerificationCodeRequest request) {
+    public void generateNewVerificationCodeAndSentIt(GenerateNewVerificationCodeRequest request) {
         User user = userRepository.findByEmail(request.email()).orElseThrow(
                 () -> new NotFoundException("username " + request.email() + " not found"));
         checkGenerateNewVerificationCodeValidation(user, request.password());
