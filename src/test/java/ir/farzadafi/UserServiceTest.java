@@ -118,4 +118,10 @@ public class UserServiceTest {
         underTest.enable(10);
         verify(userRepository, atLeastOnce()).enable(id);
     }
+
+    @Nested
+    @DisplayName("all scenario for generate new verification code and sent it for user")
+    class GenerateNewVerificationCodeAndSentIt {
+
+    }
 }
