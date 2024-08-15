@@ -1,6 +1,8 @@
 package ir.farzadafi;
 
+import ir.farzadafi.dto.GenerateNewVerificationCodeRequest;
 import ir.farzadafi.exception.InformationDuplicateException;
+import ir.farzadafi.exception.NotFoundException;
 import ir.farzadafi.model.Address;
 import ir.farzadafi.model.LocationHierarchy;
 import ir.farzadafi.model.User;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -123,5 +126,14 @@ public class UserServiceTest {
     @DisplayName("all scenario for generate new verification code and sent it for user")
     class GenerateNewVerificationCodeAndSentIt {
 
+        @Test
+        @DisplayName("Exception -> when user email not found in database")
+        public void whenEmailNotFound() {
+            GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
+                    new GenerateNewVerificationCodeRequest(user.getEmail(), user.getPassword());
+            when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+            assertThrows(NotFoundException.class,
+                    () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
+        }
     }
 }
