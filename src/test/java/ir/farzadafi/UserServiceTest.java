@@ -135,5 +135,15 @@ public class UserServiceTest {
             assertThrows(NotFoundException.class,
                     () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
         }
+
+        @Test
+        @DisplayName("Exception -> when password of user is invalid")
+        public void whenPasswordIsInvalid() {
+            GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
+                    new GenerateNewVerificationCodeRequest(user.getEmail(), user.getEmail());
+            when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+            assertThrows(IllegalArgumentException.class,
+                    () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
+        }
     }
 }
