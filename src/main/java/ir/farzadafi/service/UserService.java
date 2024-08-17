@@ -88,7 +88,7 @@ public class UserService {
         sendEmail(user.getEmail(), user.getVerificationUser().getCode());
     }
 
-    public void checkGenerateNewVerificationCodeValidation(User user, String password) {
+    private void checkGenerateNewVerificationCodeValidation(User user, String password) {
         if (!user.getPassword().equals(password))
             throw new IllegalArgumentException("your information invalid");
         int minutesDifference = user.getVerificationUser().calculatePastVerificationTime();
