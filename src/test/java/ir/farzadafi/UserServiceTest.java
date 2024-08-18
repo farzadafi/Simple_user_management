@@ -143,8 +143,9 @@ public class UserServiceTest {
             GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
                     new GenerateNewVerificationCodeRequest(user.getEmail(), user.getEmail());
             when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-            assertThrows(IllegalArgumentException.class,
+            Exception e = assertThrows(IllegalArgumentException.class,
                     () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
+            assertEquals("your information invalid", e.getMessage());
         }
     }
 }
