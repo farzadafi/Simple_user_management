@@ -132,8 +132,9 @@ public class UserServiceTest {
             GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
                     new GenerateNewVerificationCodeRequest(user.getEmail(), user.getPassword());
             when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
-            assertThrows(NotFoundException.class,
+            Exception e = assertThrows(NotFoundException.class,
                     () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
+            assertEquals("username " + user.getEmail() + " not found", e.getMessage());
         }
 
         @Test
