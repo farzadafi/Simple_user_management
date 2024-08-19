@@ -98,8 +98,9 @@ public class UserServiceTest {
         public void firstInvalidScenario() {
             DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_national_code");
             when(userRepository.save(any())).thenThrow(exception);
-            assertThrows(InformationDuplicateException.class,
+            Exception e = assertThrows(InformationDuplicateException.class,
                     () -> underTest.save(user));
+            assertEquals(user.getNationalCode() + " national code is duplicate", e.getMessage());
         }
 
         @Test
