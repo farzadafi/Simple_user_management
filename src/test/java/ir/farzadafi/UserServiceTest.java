@@ -108,8 +108,9 @@ public class UserServiceTest {
         public void secondInvalidScenario() {
             DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_email");
             when(userRepository.save(any())).thenThrow(exception);
-            assertThrows(InformationDuplicateException.class,
+            Exception e = assertThrows(InformationDuplicateException.class,
                     () -> underTest.save(user));
+            assertEquals(user.getEmail() + " email is duplicate", e.getMessage());
         }
     }
 
