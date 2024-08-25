@@ -143,7 +143,7 @@ public class UserServiceTest {
         @DisplayName("Exception -> when password of user is invalid")
         public void whenPasswordIsInvalid() {
             GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
-                    new GenerateNewVerificationCodeRequest(user.getEmail(), user.getEmail());
+                    new GenerateNewVerificationCodeRequest(user.getEmail(), "invalidPassword");
             when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
             Exception e = assertThrows(IllegalArgumentException.class,
                     () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
