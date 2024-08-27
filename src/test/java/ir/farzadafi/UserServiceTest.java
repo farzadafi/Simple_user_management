@@ -95,7 +95,7 @@ public class UserServiceTest {
 
         @Test
         @DisplayName("when national code is duplicate")
-        public void firstInvalidScenario() {
+        void firstInvalidScenario() {
             DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_national_code");
             when(userRepository.save(any())).thenThrow(exception);
             Exception e = assertThrows(InformationDuplicateException.class,
@@ -105,7 +105,7 @@ public class UserServiceTest {
 
         @Test
         @DisplayName("when email is duplicate")
-        public void secondInvalidScenario() {
+        void secondInvalidScenario() {
             DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_email");
             when(userRepository.save(any())).thenThrow(exception);
             Exception e = assertThrows(InformationDuplicateException.class,
@@ -117,7 +117,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("OK -> when want to enable user")
-    public void itShouldCanEnableUser() {
+    void itShouldCanEnableUser() {
         int id = 10;
         doNothing().when(userRepository).enable(id);
         underTest.enable(10);
@@ -130,7 +130,7 @@ public class UserServiceTest {
 
         @Test
         @DisplayName("Exception -> when user email not found in database")
-        public void whenEmailNotFound() {
+        void whenEmailNotFound() {
             GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
                     new GenerateNewVerificationCodeRequest(user.getEmail(), user.getPassword());
             when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
@@ -141,7 +141,7 @@ public class UserServiceTest {
 
         @Test
         @DisplayName("Exception -> when password of user is invalid")
-        public void whenPasswordIsInvalid() {
+        void whenPasswordIsInvalid() {
             GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
                     new GenerateNewVerificationCodeRequest(user.getEmail(), "invalidPassword");
             when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
