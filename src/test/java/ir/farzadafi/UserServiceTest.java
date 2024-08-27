@@ -60,9 +60,10 @@ public class UserServiceTest {
         LocationHierarchy locationHierarchy2 = new LocationHierarchy(3, "yazdan_shahr", locationHierarchy1);
         locationHierarchy.setName("test");
         addressSaveRequest = new Address(1, locationHierarchy, locationHierarchy1, locationHierarchy2, "street");
+        VerificationUser verificationUser = new VerificationUser(null, null, 1122, LocalDateTime.now());
         user = new User(null, "mahboobeh", "dorali", "1111111111",
                 "mahboobDorali@gmail.com", "password123", localDate, addressSaveRequest, localDateTime,
-                null, true, false);
+                verificationUser, true, false);
     }
 
     @DisplayName("all scenario for user login method")
@@ -148,6 +149,17 @@ public class UserServiceTest {
             Exception e = assertThrows(IllegalArgumentException.class,
                     () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
             assertEquals("your information invalid", e.getMessage());
+        }
+
+        @Test
+        @DisplayName("Exception -> when time of create last token less than 5 minutes")
+        void whenLastTokenIsValid() {
+            GenerateNewVerificationCodeRequest generateNewVerificationCodeRequest =
+                    new GenerateNewVerificationCodeRequest(user.getEmail(), user.getPassword());
+            when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+            Exception e = assertThrows(IllegalStateException.class,
+                    () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
+            assertEquals("every 5 minuets can create a token", e.getMessage());
         }
     }
 }
