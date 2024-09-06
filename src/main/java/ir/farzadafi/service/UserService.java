@@ -92,7 +92,7 @@ public class UserService {
         if (!user.getPassword().equals(password))
             throw new IllegalArgumentException("your information invalid");
         int minutesDifference = user.getVerificationUser().calculatePastVerificationTime();
-        if (minutesDifference < 0)
+        if (minutesDifference <= 0)
             throw new IllegalStateException("every 5 minuets can create a token");
     }
 
