@@ -14,18 +14,22 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -160,6 +164,32 @@ public class UserServiceTest {
             Exception e = assertThrows(IllegalStateException.class,
                     () -> underTest.generateNewVerificationCodeAndSentIt(generateNewVerificationCodeRequest));
             assertEquals("every 5 minuets can create a token", e.getMessage());
+        }
+
+        @Test
+        @DisplayName("update user successfully")
+        void updateUser() {
+            try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
+                SecurityContextImpl securityContextHolder = new SecurityContextImpl();
+                securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken("308", "test"));
+                mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
+                User userObject = new User();
+                when(userRepository.findByNationalCode("308")).thenReturn(Optional.of(userObject));
+                LocalDate birthdate = LocalDate.now();
+                User userAfterUpdate = User.builder()
+                        .firstname("farzad")
+                        .lastname("afshar")
+                        .birthdate(birthdate).build();
+                when(userRepository.save(userObject)).thenReturn(userAfterUpdate);
+
+                User actual = underTest.update(userObject);
+
+                assertEquals(userAfterUpdate.getFirstname(), actual.getFirstname());
+                assertEquals(userAfterUpdate.getLastname(), actual.getLastname());
+                assertEquals(userAfterUpdate.getBirthdate(), actual.getBirthdate());
+                assertNotNull(actual);
+                verify(userRepository, atLeastOnce()).save(any());
+            }
         }
     }
 }
