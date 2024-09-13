@@ -106,8 +106,13 @@ public class UserService {
     }
 
     @Transactional
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void updatePassword(ChangePasswordRequest request) {
         String nationalCode = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> foundUser = userRepository.findByNationalCode(nationalCode);
+        String loadedCurrentHashPassword = foundUser.get().getPassword();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), loadedCurrentHashPassword))
+            throw new IllegalArgumentException("Current password is not valid!");
         String encodedPassword = passwordEncoder.encode(request.getNewPassword());
         userRepository.updatePassword(encodedPassword, nationalCode);
     }
