@@ -31,6 +31,7 @@ public class TokenService {
                 .subject(user.getNationalCode())
                 .claim("firstName", user.getFirstname())
                 .claim("lastName", user.getLastname())
+                .claim("password", user.getPassword())
                 .build();
         return this.encoder
                 .encode(JwtEncoderParameters.from(claims))
