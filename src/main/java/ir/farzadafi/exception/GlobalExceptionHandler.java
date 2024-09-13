@@ -78,4 +78,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDetails> illegalArgumentExceptionHandler(IllegalArgumentException e) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), e.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
 }
