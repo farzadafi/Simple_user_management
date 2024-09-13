@@ -191,5 +191,12 @@ public class UserServiceTest {
                 verify(userRepository, atLeastOnce()).save(any());
             }
         }
+
+
+        @Nested
+        @DisplayName("all scenario for update password method")
+        class UpdatePassword {
+
+        }
     }
 }
