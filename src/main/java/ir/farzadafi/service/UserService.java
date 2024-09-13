@@ -44,7 +44,7 @@ public class UserService {
             Address save = addressService.save(user.getAddress());
             user.setAddress(save);
             user = userRepository.save(user);
-            sendEmail(user.getEmail(), user.getVerificationUser().getCode());
+//            sendEmail(user.getEmail(), user.getVerificationUser().getCode());
         } catch (DataIntegrityViolationException e) {
             handleSaveException(e.getMessage(), user.getNationalCode(), user.getEmail());
         }
@@ -106,12 +106,10 @@ public class UserService {
     }
 
     @Transactional
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void updatePassword(ChangePasswordRequest request) {
         String nationalCode = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> foundUser = userRepository.findByNationalCode(nationalCode);
-        String loadedCurrentHashPassword = foundUser.get().getPassword();
-        if (!passwordEncoder.matches(request.getCurrentPassword(), loadedCurrentHashPassword))
+        String currentHashPassword = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), currentHashPassword))
             throw new IllegalArgumentException("Current password is not valid!");
         String encodedPassword = passwordEncoder.encode(request.getNewPassword());
         userRepository.updatePassword(encodedPassword, nationalCode);
