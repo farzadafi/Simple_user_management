@@ -28,7 +28,7 @@ public class AuthorizationAspect {
         String tokenWithoutBearer = getJwtToken(request);
         try {
             Jwt decode = this.jwtDecoder.decode(tokenWithoutBearer);
-            setContextSecurity(decode.getSubject());
+            setContextSecurity(decode.getSubject(), decode.getClaim("password"));
         } catch (Exception e) {
             throw new AccessDeniedException("Please send valid Authorization Header!");
         }
@@ -41,8 +41,8 @@ public class AuthorizationAspect {
         return tokenWithBearer.substring(7);
     }
 
-    public void setContextSecurity(String nationalCode) {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(nationalCode, "password");
+    public void setContextSecurity(String nationalCode, String password) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(nationalCode, password);
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
