@@ -1,5 +1,6 @@
 package ir.farzadafi;
 
+import ir.farzadafi.dto.ChangePasswordRequest;
 import ir.farzadafi.dto.GenerateNewVerificationCodeRequest;
 import ir.farzadafi.exception.InformationDuplicateException;
 import ir.farzadafi.exception.NotFoundException;
@@ -197,6 +198,19 @@ public class UserServiceTest {
         @DisplayName("all scenario for update password method")
         class UpdatePassword {
 
+            @Test
+            @DisplayName("Exception -> current password isn't valid")
+            void invalidCurrentPassword() {
+                String hashPassword = "$2a$12$EOQ/TPDwYD/Oy0AkRWzHqeS3q0KboH.JcVLlWgRMIzgXvhSW9/pc6"; //hash from 'test'
+                try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
+                    SecurityContextImpl securityContextHolder = new SecurityContextImpl();
+                    securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken("308", hashPassword));
+                    mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
+                    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                            () -> underTest.updatePassword(new ChangePasswordRequest("t", "", "")));
+                    assertEquals("Current password is not valid!", e.getMessage());
+                }
+            }
         }
     }
 }
