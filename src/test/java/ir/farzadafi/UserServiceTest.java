@@ -215,6 +215,20 @@ public class UserServiceTest {
                     assertEquals("Current password is not valid!", e.getMessage());
                 }
             }
+
+            @Test
+            @DisplayName("OK -> change password successfully done")
+            void changePasswordDone() {
+                when(bCryptPasswordEncoder.encode(newPassword)).thenReturn(hashPassword);
+                when(bCryptPasswordEncoder.matches(currentPassword, hashPassword)).thenReturn(true);
+                try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
+                    SecurityContextImpl securityContextHolder = new SecurityContextImpl();
+                    securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken(nationalCode, hashPassword));
+                    mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
+                    underTest.updatePassword(new ChangePasswordRequest(currentPassword, newPassword, newPassword));
+                    verify(userRepository, atLeastOnce()).updatePassword(hashPassword, nationalCode);
+                }
+            }
         }
     }
 }
