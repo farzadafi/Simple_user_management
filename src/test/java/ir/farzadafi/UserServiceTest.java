@@ -198,16 +198,20 @@ public class UserServiceTest {
         @DisplayName("all scenario for update password method")
         class UpdatePassword {
 
+            private final String hashPassword = "$2a$12$EOQ/TPDwYD/Oy0AkRWzHqeS3q0KboH.JcVLlWgRMIzgXvhSW9/pc6"; //hash from test
+            private final String nationalCode = "308";
+            private final String currentPassword = "test";
+            private final String newPassword = "new";
+
             @Test
             @DisplayName("Exception -> current password isn't valid")
             void invalidCurrentPassword() {
-                String hashPassword = "$2a$12$EOQ/TPDwYD/Oy0AkRWzHqeS3q0KboH.JcVLlWgRMIzgXvhSW9/pc6"; //hash from 'test'
                 try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
                     SecurityContextImpl securityContextHolder = new SecurityContextImpl();
-                    securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken("308", hashPassword));
+                    securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken(nationalCode, hashPassword));
                     mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
                     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                            () -> underTest.updatePassword(new ChangePasswordRequest("t", "", "")));
+                            () -> underTest.updatePassword(new ChangePasswordRequest(currentPassword, newPassword, newPassword)));
                     assertEquals("Current password is not valid!", e.getMessage());
                 }
             }
