@@ -230,5 +230,17 @@ public class UserServiceTest {
                 }
             }
         }
+
+        @Test
+        @DisplayName("remove successfully user")
+        void removeUser() {
+            try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)){
+                SecurityContextImpl securityContextHolder = new SecurityContextImpl();
+                securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken("308", "test"));
+                mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
+                doNothing().when(userRepository).deleteByNationalCode(anyString());
+                verify(userRepository, atLeastOnce()).deleteByNationalCode(anyString());
+            }
+        }
     }
 }
