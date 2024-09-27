@@ -19,6 +19,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -234,12 +236,27 @@ public class UserServiceTest {
         @Test
         @DisplayName("remove successfully user")
         void removeUser() {
-            try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)){
+            try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
                 SecurityContextImpl securityContextHolder = new SecurityContextImpl();
                 securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken("308", "test"));
                 mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
                 doNothing().when(userRepository).deleteByNationalCode(anyString());
                 verify(userRepository, atLeastOnce()).deleteByNationalCode(anyString());
+            }
+        }
+
+        @Nested
+        @DisplayName("all scenario for dynamic user find")
+        class DynamicSearchTest {
+
+            @Test
+            @DisplayName("find user based on age")
+            @SuppressWarnings("unchecked")
+            void ageUserFind() {
+                when(userRepository.findAll((Specification<User>) any())).thenReturn(List.of());
+                List<User> users = underTest.findAllByCriteria("age", "10");
+                assertNotNull(users);
+                assertEquals(0, users.size());
             }
         }
     }
