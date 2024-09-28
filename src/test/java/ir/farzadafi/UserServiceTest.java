@@ -258,6 +258,16 @@ public class UserServiceTest {
                 assertNotNull(users);
                 assertEquals(0, users.size());
             }
+
+            @Test
+            @DisplayName("find user based on province")
+            @SuppressWarnings("unchecked")
+            void provinceUserFind() {
+                when(userRepository.findAll((Specification<User>) any())).thenReturn(List.of());
+                List<User> users = underTest.findAllByCriteria("province", "kerman");
+                assertNotNull(users);
+                assertEquals(0, users.size());
+            }
         }
     }
 }
