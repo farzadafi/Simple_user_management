@@ -19,6 +19,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -268,6 +269,16 @@ public class UserServiceTest {
                 assertNotNull(users);
                 assertEquals(0, users.size());
             }
+        }
+
+        @Test
+        @DisplayName("OK -> find all user")
+        void findAllUser() {
+            Pageable pageable = PageRequest.of(1, 1, Sort.by(Sort.Order.asc("name")));
+            when(userRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of()));
+            Page<User> users = underTest.getAllUser(pageable);
+            assertNotNull(users);
+            assertEquals(0, users.getTotalElements());
         }
     }
 }
