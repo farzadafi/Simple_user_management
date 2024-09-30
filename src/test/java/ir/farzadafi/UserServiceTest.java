@@ -103,7 +103,7 @@ public class UserServiceTest {
         }
 
         @Test
-        @DisplayName("when national code is duplicate")
+        @DisplayName("Exception -> when national code is duplicate")
         void firstInvalidScenario() {
             DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_national_code");
             when(userRepository.save(any())).thenThrow(exception);
@@ -113,7 +113,7 @@ public class UserServiceTest {
         }
 
         @Test
-        @DisplayName("when email is duplicate")
+        @DisplayName("Exception -> when email is duplicate")
         void secondInvalidScenario() {
             DataIntegrityViolationException exception = new DataIntegrityViolationException("user.UK_email");
             when(userRepository.save(any())).thenThrow(exception);
@@ -171,7 +171,7 @@ public class UserServiceTest {
         }
 
         @Test
-        @DisplayName("update user successfully")
+        @DisplayName("OK -> update user successfully")
         void updateUser() {
             try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
                 SecurityContextImpl securityContextHolder = new SecurityContextImpl();
@@ -235,7 +235,7 @@ public class UserServiceTest {
         }
 
         @Test
-        @DisplayName("remove successfully user")
+        @DisplayName("OK -> remove successfully user")
         void removeUser() {
             try (MockedStatic<SecurityContextHolder> mocked = Mockito.mockStatic(SecurityContextHolder.class)) {
                 SecurityContextImpl securityContextHolder = new SecurityContextImpl();
@@ -251,7 +251,7 @@ public class UserServiceTest {
         class DynamicSearchTest {
 
             @Test
-            @DisplayName("find user based on age")
+            @DisplayName("OK -> find user based on age")
             @SuppressWarnings("unchecked")
             void ageUserFind() {
                 when(userRepository.findAll((Specification<User>) any())).thenReturn(List.of());
@@ -261,7 +261,7 @@ public class UserServiceTest {
             }
 
             @Test
-            @DisplayName("find user based on province")
+            @DisplayName("OK -> find user based on province")
             @SuppressWarnings("unchecked")
             void provinceUserFind() {
                 when(userRepository.findAll((Specification<User>) any())).thenReturn(List.of());
