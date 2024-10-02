@@ -44,7 +44,7 @@ public class UserService {
             Address save = addressService.save(user.getAddress());
             user.setAddress(save);
             user = userRepository.save(user);
-//            sendEmail(user.getEmail(), user.getVerificationUser().getCode());
+            sendEmail(user.getEmail(), user.getVerificationUser().getCode());
         } catch (DataIntegrityViolationException e) {
             handleSaveException(e.getMessage(), user.getNationalCode(), user.getEmail());
         }
