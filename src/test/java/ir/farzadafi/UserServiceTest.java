@@ -241,8 +241,9 @@ public class UserServiceTest {
                 SecurityContextImpl securityContextHolder = new SecurityContextImpl();
                 securityContextHolder.setAuthentication(new UsernamePasswordAuthenticationToken("308", "test"));
                 mocked.when(SecurityContextHolder::getContext).thenReturn(securityContextHolder);
-                doNothing().when(userRepository).deleteByNationalCode(anyString());
-                verify(userRepository, atLeastOnce()).deleteByNationalCode(anyString());
+                doNothing().when(userRepository).deleteByNationalCode("308");
+                underTest.remove();
+                verify(userRepository, times(1)).deleteByNationalCode("308");
             }
         }
 
