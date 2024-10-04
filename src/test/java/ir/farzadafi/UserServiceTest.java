@@ -23,6 +23,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -280,6 +281,22 @@ public class UserServiceTest {
             Page<User> users = underTest.getAllUser(pageable);
             assertNotNull(users);
             assertEquals(0, users.getTotalElements());
+        }
+
+        @Nested
+        @DisplayName("all scenario for isLoginCheck method")
+        class LoginCheckMethod{
+
+            @Test
+            @DisplayName("Exception -> when password incorrect")
+            void whenPasswordIncorrect() {
+                String nationalCode = "308";
+                String password = "308";
+                when(userRepository.findByNationalCode(nationalCode)).thenReturn(Optional.empty());
+                Exception e = assertThrows(BadCredentialsException.class,
+                        () -> underTest.isLoginCheck(nationalCode, password));
+                assertEquals("Bad credentials", e.getMessage());
+            }
         }
     }
 }
