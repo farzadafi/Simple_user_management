@@ -297,6 +297,20 @@ public class UserServiceTest {
                         () -> underTest.isLoginCheck(nationalCode, password));
                 assertEquals("Bad credentials", e.getMessage());
             }
+
+            @Test
+            @DisplayName("Exception -> when user enter password and DB password not same")
+            void whenPasswordIsNotSame() {
+                String nationalCode = "308";
+                String password = "308";
+                User user1 = new User();
+                user1.setPassword("309");
+                when(userRepository.findByNationalCode(nationalCode)).thenReturn(Optional.of(user1));
+                Exception e = assertThrows(BadCredentialsException.class,
+                        () -> underTest.isLoginCheck(nationalCode, password));
+                assertEquals("Bad credentials", e.getMessage());
+
+            }
         }
     }
 }
