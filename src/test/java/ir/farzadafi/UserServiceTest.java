@@ -311,6 +311,20 @@ public class UserServiceTest {
                 assertEquals("Bad credentials", e.getMessage());
 
             }
+
+            @Test
+            @DisplayName("OK -> user can login")
+            void userCanLogin() {
+                String nationalCode = "308";
+                String password = "308";
+                User user1 = new User();
+                user1.setPassword("308");
+                when(bCryptPasswordEncoder.matches(password, user1.getPassword())).thenReturn(true);
+                when(userRepository.findByNationalCode(nationalCode)).thenReturn(Optional.of(user1));
+                User loginCheck = underTest.isLoginCheck(nationalCode, password);
+                assertNotNull(loginCheck);
+                assertEquals("308", user1.getPassword());
+            }
         }
     }
 }
