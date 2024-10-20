@@ -1,8 +1,9 @@
 package ir.farzadafi.service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.annotation.PostConstruct;
 
@@ -37,19 +38,15 @@ public class YmlPropertyService{
   }
 
   @PostConstruct
-  public void test() throws FileNotFoundException {
-    System.out.println("farzad");
-    System.out.println("farzad");
-    System.out.println("farzad");
-    System.out.println("farzad");
-    System.out.println("farzad");
-    System.out.println("farzad");
-    System.out.println("farzad");
-    System.out.println("farzad");
-    File file = ResourceUtils.getFile("classpath:");
-    File[] files = file.listFiles();
-    for (File file2: files) {
-          System.out.println(file2.getName()); 
+  public void findAllYmlFile() {
+    File[] files = null;
+    try {
+    files = ResourceUtils.getFile("classpath:").listFiles();
+    } catch (Exception e) {
+      throw new DirectoryException("Read resources occur exception");
     }
+    List<File> ymlFile = Arrays.stream(files)
+      .filter(f -> f.getName().contains(".yml"))
+      .collect(Collectors.toList());
   }
 }
