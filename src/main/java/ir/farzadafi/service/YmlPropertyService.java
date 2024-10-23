@@ -14,6 +14,13 @@ import ir.farzadafi.exception.DirectoryException;
 @Service
 public class YmlPropertyService{
 
+  public List<String> getAllYmlFileNames() {
+    List<File> files = getAllYmlFiles();
+    return files.stream()
+      .map(f -> f.getName())
+      .toList();
+  }
+
   private List<File> getAllYmlFiles() {
     File[] files = returnAllFileUnderResourcesDir();
     if(files.length == 0)
