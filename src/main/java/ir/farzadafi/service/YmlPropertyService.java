@@ -2,6 +2,9 @@ package ir.farzadafi.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -10,6 +13,18 @@ import ir.farzadafi.exception.DirectoryException;
 
 @Service
 public class YmlPropertyService{
+
+  private List<File> getAllYmlFiles() {
+    File[] files = returnAllFileUnderResourcesDir();
+    if(files.length == 0)
+      throw new DirectoryException("localConfig directory is Empty!");
+    List<File> ymlFiles = Arrays.stream(files)
+      .filter(f -> isYmlFile(f))
+      .collect(Collectors.toList());
+    if(ymlFiles.isEmpty())
+      throw new DirectoryException("yml file not found in resources directory");
+    return ymlFiles;
+  }
 
   public File[] returnAllFileUnderResourcesDir() {
     File[] files = null;
