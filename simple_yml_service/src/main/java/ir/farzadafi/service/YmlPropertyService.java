@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -51,5 +54,15 @@ public class YmlPropertyService{
         return extension.equals("true");
     } 
         return false;
+    }
+
+      public String ymlToJson(Object ymlData) {
+        System.out.println(ymlData);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(ymlData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
