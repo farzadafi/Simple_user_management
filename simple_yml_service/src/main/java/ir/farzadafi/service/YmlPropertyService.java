@@ -15,32 +15,32 @@ import org.springframework.util.ResourceUtils;
 import ir.farzadafi.exception.DirectoryException;
 
 @Service
-public class YmlPropertyService{
+public class YmlPropertyService {
 
   public List<String> getAllYmlFileNames() {
     List<File> files = getAllYmlFiles();
     return files.stream()
-      .map(f -> f.getName())
-      .toList();
+        .map(f -> f.getName())
+        .toList();
   }
 
   private List<File> getAllYmlFiles() {
     File[] files = returnAllFileUnderResourcesDir();
-    if(files.length == 0)
+    if (files.length == 0)
       throw new DirectoryException("localConfig directory is Empty!");
     List<File> ymlFiles = Arrays.stream(files)
-      .filter(f -> isYmlFile(f))
-      .collect(Collectors.toList());
-    if(ymlFiles.isEmpty())
+        .filter(f -> isYmlFile(f))
+        .collect(Collectors.toList());
+    if (ymlFiles.isEmpty())
       throw new DirectoryException("yml file not found in resources directory");
     return ymlFiles;
   }
 
   public File[] returnAllFileUnderResourcesDir() {
     File[] files = null;
-    try{
+    try {
       files = ResourceUtils.getFile("classpath:").listFiles();
-    }catch(IOException e) {
+    } catch (IOException e) {
       throw new DirectoryException("find files under resources occur exception");
     }
     return files;
@@ -51,18 +51,18 @@ public class YmlPropertyService{
     int lastIndexOfDot = name.lastIndexOf('.');
     if ((lastIndexOfDot < 0) && (lastIndexOfDot < name.length() - 1)) {
       String extension = name.substring(lastIndexOfDot + 1).toLowerCase();
-        return extension.equals("true");
-    } 
-        return false;
+      return extension.equals("true");
     }
+    return false;
+  }
 
-      public String ymlToJson(Object ymlData) {
-        System.out.println(ymlData);
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.writeValueAsString(ymlData);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+  public String ymlToJson(Object ymlData) {
+    System.out.println(ymlData);
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.writeValueAsString(ymlData);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
+  }
 }
