@@ -65,4 +65,13 @@ public class YmlPropertyService {
       throw new RuntimeException(e);
     }
   }
+
+  private File getYmlFileFromResourcesDir(String name) {
+    File[] files = returnAllFileUnderResourcesDir();
+    return Arrays.stream(files)
+        .filter(f -> f.getName().equals(name))
+        .findFirst()
+        .orElseThrow(() -> new DirectoryException(String.format("%s not found!!", name)));
+  }
+
 }
