@@ -1,7 +1,10 @@
 package ir.farzadafi.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import ir.farzadafi.exception.DirectoryException;
 
@@ -74,4 +79,14 @@ public class YmlPropertyService {
         .orElseThrow(() -> new DirectoryException(String.format("%s not found!!", name)));
   }
 
+  private Object getDataObjectFromYmlFile(File ymlFile) {
+    InputStream inputStream;
+    try {
+      inputStream = new FileInputStream(ymlFile);
+    } catch (FileNotFoundException e) {
+      throw new YAMLException("property file not found!");
+    }
+    Yaml yml = new Yaml();
+    return yml.load(inputStream);
+  }
 }
