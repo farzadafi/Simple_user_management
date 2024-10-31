@@ -2,7 +2,6 @@ package ir.farzadafi.service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -86,13 +85,11 @@ public class YmlPropertyService {
   }
 
   private Object getDataObjectFromYmlFile(File ymlFile) {
-    InputStream inputStream;
-    try {
-      inputStream = new FileInputStream(ymlFile);
-    } catch (FileNotFoundException e) {
+    Yaml yml = new Yaml();
+    try(InputStream inputStream1 = new FileInputStream(ymlFile)) {
+      return yml.load(inputStream1);
+    }catch(IOException e){
       throw new YAMLException("property file not found!");
     }
-    Yaml yml = new Yaml();
-    return yml.load(inputStream);
   }
 }
