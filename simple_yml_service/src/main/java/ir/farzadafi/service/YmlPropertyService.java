@@ -79,6 +79,12 @@ public class YmlPropertyService {
         .orElseThrow(() -> new DirectoryException(String.format("%s not found!!", name)));
   }
 
+  public String convertYmlToJson(String ymlName) {
+    File file = getYmlFileFromResourcesDir(ymlName);
+    Object object = getDataObjectFromYmlFile(file);
+    return ymlToJson(object);
+  }
+
   private Object getDataObjectFromYmlFile(File ymlFile) {
     InputStream inputStream;
     try {
